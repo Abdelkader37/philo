@@ -32,11 +32,11 @@ unsigned long	get_time(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
-void	ft_sleep(unsigned long target, int flag)
+void	ft_sleep(unsigned long target, t_philo *philo)
 {
 	unsigned long	start;
 
 	start = get_time();
-	while (get_time() - start < target && flag)
+	while (get_time() - start < target && chek_life(philo))
 		usleep(100);
 }

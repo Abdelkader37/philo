@@ -20,8 +20,8 @@ typedef struct s_list
 	int				allnmeal;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	die;
-	pthread_mutex_t	meal;
-
+	pthread_mutex_t	print;
+	
 }					t_arg;
 
 typedef struct s_lst
@@ -30,20 +30,23 @@ typedef struct s_lst
 	unsigned long	nmeals;
 	unsigned long	last_meal;
 	pthread_t		thread;
+	pthread_mutex_t	meal;
 	t_arg			*arg;
 }					t_philo;
 
 // thread_fun
 void				creat_threads(unsigned long nfilo, t_arg *arg);
 unsigned long		get_time(void);
-void				ft_sleep(unsigned long target, int flag);
+void				ft_sleep(unsigned long target, t_philo *philo);
 void				init_mtx(t_arg *arg);
-int chek_life(int  is_alive, t_philo *philo);
+int chek_life( t_philo *philo);
 void     chek_philo(t_philo *philo);
 void     chek_meals(t_philo *philo);
 void *monitor_func(void *arg);
+void print(t_philo *philo, char *s);
 
 
+int chek_last_meal(t_philo philo);
 
 // UTILS
 unsigned long		ft_atoi(char *str);
