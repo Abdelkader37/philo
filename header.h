@@ -8,21 +8,21 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_list
+typedef struct s_struct
 {
-	unsigned long	number_of_philosophers;
-	unsigned long	time_to_die;
-	unsigned long	time_to_eat;
-	unsigned long	time_to_sleep;
-	unsigned long	number_of_times_to_eat;
-	unsigned long	start_time;
+    unsigned long   time_die;
+    unsigned long   time_eat;
+    unsigned long   time_sleep;
+    unsigned long   meals;
+    unsigned long   nphilo;
+    unsigned long   start;
+    unsigned long   number_to_eat;
+    int             arg5;
     int             isalive;
-	int				allnmeal;
-	pthread_mutex_t	*fork;
+    pthread_mutex_t	*fork;
 	pthread_mutex_t	die;
 	pthread_mutex_t	print;
-	
-}					t_arg;
+}t_arg;
 
 typedef struct s_lst
 {
@@ -34,22 +34,27 @@ typedef struct s_lst
 	t_arg			*arg;
 }					t_philo;
 
-// thread_fun
-void				creat_threads(unsigned long nfilo, t_arg *arg);
-unsigned long		get_time(void);
-void				ft_sleep(unsigned long target, t_philo *philo);
-void				init_mtx(t_arg *arg);
-int chek_life( t_philo *philo);
-void     chek_philo(t_philo *philo);
-void     chek_meals(t_philo *philo);
-void *monitor_func(void *arg);
-void print(t_philo *philo, char *s);
-
-
-int chek_last_meal(t_philo philo);
-
 // UTILS
-unsigned long		ft_atoi(char *str);
-t_arg				*init_struct(int ac, char **av);
+unsigned long   ft_atoi(char *s);
+t_arg           *init_arg(int ac, char **av);
+
+
+// THREAD FUNC
+void            init_fork(t_arg *arg);
+void            destroy_fork(t_arg *arg);
+int             check_life(t_philo *philo);
+void            *monitor_func(void *arg);
+void            print(t_philo *philo, char *s);
+int             check_life(t_philo *philo);
+void            eat(t_philo *philo);
+void            sleepp(t_philo *philo);
+void            think(t_philo *philo);
+void            create_threads(unsigned long nphilo, t_arg  *arg);
+void            *philo_fun(void *arg);
+int	            check_philo(t_philo philo);
+
+// TIME
+unsigned long	get_time(void);
+void	        ft_sleep(unsigned long target, t_philo *philo);
 
 #endif

@@ -1,42 +1,62 @@
 #include "header.h"
 
-t_arg	*init_struct(int ac, char **av)
+t_arg	*init_arg(int ac, char **av)
 {
 	t_arg	*arg;
 
-	arg = malloc(sizeof(t_arg));
-	arg->number_of_philosophers = ft_atoi(av[1]);
-	arg->time_to_die = ft_atoi(av[2]);
-	arg->time_to_eat = ft_atoi(av[3]);
-	arg->time_to_sleep = ft_atoi(av[4]);
-    arg->isalive = 1;
-	arg->allnmeal = 0;
-	if (ac == 6)
-		arg->number_of_times_to_eat = ft_atoi(av[5]);
-	else if(ac == 5)
-		arg->number_of_times_to_eat = 0;
-	if (arg->number_of_philosophers <= 0 || arg->time_to_die <= 0
-		|| arg->time_to_eat <= 0 || arg->time_to_sleep <= 0)
+	arg = malloc(sizeof(t_arg ));
+	arg->nphilo = ft_atoi(av[1]);
+	arg->time_die = ft_atoi(av[2]);
+	arg->time_eat = ft_atoi(av[3]);
+	arg->time_sleep = ft_atoi(av[4]);
+	if (ac == 5)
+		arg->arg5 = 0;
+	else
+	{
+		arg->arg5 = 1;
+		arg->number_to_eat = ft_atoi(av[5]);
+	}
+	if (!arg->time_die || !arg->time_eat || !arg->time_sleep || !arg->nphilo)
 	{
 		write(2, "Error: Invalid argument\n", 25);
 		return (NULL);
 	}
-	else
-		return (arg);
+	arg->isalive = 1;
+	arg->meals = 0;
+	pthread_mutex_init(&arg->die, NULL);
+	pthread_mutex_init(&arg->print, NULL);
+	return (arg);
 }
 
-unsigned long	get_time(void)
+void	init_fork(t_arg *arg)
 {
-	struct timeval	tv;
+	unsigned long	i;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	i = 0;
+	arg->fork = malloc(sizeof(pthread_mutex_t) * arg->nphilo);
+	while (i < arg->nphilo)
+	{
+		pthread_mutex_init(&arg->fork[i], NULL);
+		i++;
+	}
 }
-void	ft_sleep(unsigned long target, t_philo *philo)
+void	destroy_fork(t_arg *arg)
 {
-	unsigned long	start;
+	unsigned long	i;
 
-	start = get_time();
-	while (get_time() - start < target && chek_life(philo))
-		usleep(100);
+	i = 0;
+	while (i < arg->nphilo)
+	{
+		pthread_mutex_destroy(&arg->fork[i]);
+		i++;
+	}
+	free(arg->fork);
+}
+
+void	print(t_philo *philo, char *s)
+{
+    pthread_mutex_lock(&philo->arg->print);
+	if (check_life(philo))
+		printf("%lu %lu %s\n", get_time() - philo->arg->start, philo->id, s);
+    pthread_mutex_unlock(&philo->arg->print);
 }

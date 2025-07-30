@@ -2,14 +2,15 @@
 
 int	main(int ac, char **av)
 {
-	int nfilo;
 	t_arg *arg;
-
-	if (ac <= 4)
+	if (ac != 5 && ac != 6)
+	{
+		write(2, "Error: Invalid argument\n", 25);
 		return (1);
-	arg = init_struct(ac, av);
-	if (!arg)
-		return (1);
-	nfilo = ft_atoi(av[1]);
-	creat_threads(nfilo, arg);
+	}
+	arg = init_arg(ac, av);
+	init_fork(arg);
+	create_threads(arg->nphilo, arg);
+	destroy_fork(arg);
+	free(arg);
 }

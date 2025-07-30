@@ -1,7 +1,7 @@
-SRC = main.c threads.c utils.c atoi.c
+SRC = main.c thread.c utils.c atoi.c time.c monitor.c
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror# -fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror  #-fsanitize=address -g
 HRD =  header.h
 
 all: $(NAME)

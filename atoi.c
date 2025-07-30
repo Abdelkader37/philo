@@ -1,34 +1,36 @@
 #include "header.h"
 
-int	is_space(char c)
+int	is_space(int c)
 {
-	return (((c >= 9 && c <= 13) || c == 32));
+	return (((c >= 9 && c <= 13) || c == ' '));
 }
 
-int	is_num(int c)
+int	is_digit(int c)
 {
 	return ((c >= '0' && c <= '9'));
 }
 
-unsigned long	ft_atoi(char *str)
+unsigned long	ft_atoi(char *s)
 {
-	unsigned long	num;
+	int	nmb;
 
-	num = 0;
-	while (*str && is_space(*str))
-		str++;
-	if (*str == '-' || *str == '+')
+	nmb = 0;
+	while (*s && is_space(*s))
+		s++;
+	if (*s == '-' || *s == '+')
 	{
-		if (*str == '-')
+		if (*s == '-')
 			return (0);
-		str++;
+		s++;
 	}
-	while (*str && is_num(*str))
+	while (*s && is_digit(*s))
 	{
-		num = num * 10 + (*str - 48);
-		str++;
+		nmb = nmb * 10 + (*s - 48);
+		s++;
 	}
-	if (*str && !is_num(*str))
+	while (*s && is_space(*s))
+		s++;
+	if (*s && !is_digit(*s))
 		return (0);
-	return (num);
+	return (nmb);
 }
