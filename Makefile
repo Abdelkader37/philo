@@ -1,17 +1,21 @@
-SRC = main.c thread.c utils.c atoi.c time.c monitor.c
+SRC = main.c thread.c utils.c atoi.c time.c monitor.c philo.c
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror  #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror
 HRD =  header.h
+
+OBJ=$(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME) : $(SRC) $(HRD)
-	$(CC)  $(CFLAGS) $(SRC) -o $(NAME)
+$(NAME) : $(OBJ) $(HRD)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean:
-
-fclean:
+	rm -rf $(OBJ)
+fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+
+.PHONY: clean
